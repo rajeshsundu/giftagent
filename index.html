@@ -83,7 +83,7 @@
 
     <div class="container mx-auto p-4 sm:p-6 lg:p-8">
         <div id="main-content">
-            <!-- Hero Section and Tool... -->
+            <!-- Hero Section -->
             <section class="text-center my-12 sm:my-20">
                  <h1 class="text-4xl sm:text-6xl font-extrabold text-gray-900 leading-tight">
                     Stop Guessing. <br class="hidden sm:block">
@@ -96,6 +96,8 @@
                     Start Your Free Search
                 </a>
             </section>
+            
+            <!-- Main Tool Section -->
             <main id="toolContainer" class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl max-w-2xl mx-auto">
                 <div id="stepsContainer" class="relative min-h-[300px]">
                     <!-- Step 1: Recipient -->
@@ -157,7 +159,7 @@
                 </div>
             </main>
             <section id="resultsSection" class="mt-16 hidden">
-                <!-- Results will be shown here -->
+                 <!-- Results will be shown here -->
             </section>
         </div>
 
@@ -211,9 +213,9 @@
     </div>
 
 
-    <!-- Firebase SDKs -->
+    <!-- Main App Script -->
     <script type="module">
-        // Import the functions you need from the SDKs you need
+        // Import Firebase functions
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { 
             getAuth, 
@@ -249,7 +251,7 @@
         let auth;
         let db;
         let googleProvider;
-        let profilesUnsubscribe = null; // To detach listener on logout
+        let profilesUnsubscribe = null;
 
         try {
             app = initializeApp(firebaseConfig);
@@ -260,61 +262,148 @@
             console.error("Firebase initialization failed.", error);
         }
 
-        // --- AUTH UI MANAGEMENT ---
+        // --- GLOBAL APP STATE & CONSTANTS ---
+        let currentStep = 1;
+        const formData = { personas: [] };
+        let timerInterval;
+
+        const personas = [
+            { name: 'The Homebody', emoji: '🏡' },
+            { name: 'The Adventurer', emoji: '🌍' },
+            { name: 'The Foodie', emoji: '🍔' },
+            { name: 'The Intellectual', emoji: '📚' },
+            { name: 'The Fashionista', emoji: '🕶️' },
+            { name: 'The Techie', emoji: '💻' },
+            { name: 'The Gardener', emoji: '🌿' },
+            { name: 'The Pet Lover', emoji: '🐾' },
+            { name: 'The Fitness Buff', emoji: '💪' },
+            { name: 'The Music Lover', emoji: '🎵' },
+            { name: 'The Movie Buff', emoji: '🎬' },
+            { name: 'The Artist', emoji: '🎨' }
+        ];
+        
+        // --- DOM ELEMENTS ---
         const authModal = document.getElementById('authModal');
+        const loginView = document.getElementById('login-view');
+        const signupView = document.getElementById('signup-view');
         const loggedInView = document.getElementById('logged-in-view');
         const loggedOutView = document.getElementById('logged-out-view');
         const userEmailEl = document.getElementById('userEmail');
-        
-        if (auth) {
-            onAuthStateChanged(auth, user => {
-                if (user) {
-                    loggedInView.classList.remove('hidden');
-                    loggedOutView.classList.add('hidden');
-                    userEmailEl.textContent = user.email;
-                    closeAuthModal();
-                    showDashboard();
-                    fetchProfiles(user.uid); // Fetch profiles when user logs in
-                } else {
-                    loggedInView.classList.add('hidden');
-                    loggedOutView.classList.remove('hidden');
-                    userEmailEl.textContent = '';
-                    showMainView();
-                    if (profilesUnsubscribe) {
-                        profilesUnsubscribe(); // Detach the listener
-                    }
-                }
-            });
-        }
-        
-        // --- AUTH FUNCTIONS (abbreviated for clarity) ---
-        window.openAuthModal = (view) => { /* ... */ };
-        window.closeAuthModal = () => { /* ... */ };
-        window.signupUser = () => { /* ... */ };
-        window.loginUser = () => { /* ... */ };
-        window.signInWithGoogle = () => { /* ... */ };
-        window.logoutUser = () => { if (auth) signOut(auth); };
-
-        // --- VIEW MANAGEMENT ---
+        const authErrorEl = document.getElementById('authError');
         const mainContent = document.getElementById('main-content');
         const dashboardView = document.getElementById('dashboard-view');
+        const profileModal = document.getElementById('profileModal');
+        const profileErrorEl = document.getElementById('profileError');
+        const profilesListEl = document.getElementById('profilesList');
 
-        window.showDashboard = () => {
+        // --- ATTACH FUNCTIONS TO WINDOW OBJECT ---
+        Object.assign(window, {
+            nextStep, prevStep, selectBudget, generateGifts, startOver,
+            openAuthModal, closeAuthModal, signupUser, loginUser, signInWithGoogle, logoutUser,
+            showDashboard, showMainView, openProfileModal, closeProfileModal, saveProfile
+        });
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            populatePersonas();
+            // Firebase Auth State Listener
+            if (auth) {
+                onAuthStateChanged(auth, user => {
+                    if (user) {
+                        loggedInView.classList.remove('hidden');
+                        loggedOutView.classList.add('hidden');
+                        userEmailEl.textContent = user.email;
+                        closeAuthModal();
+                        showDashboard();
+                        fetchProfiles(user.uid);
+                    } else {
+                        loggedInView.classList.add('hidden');
+                        loggedOutView.classList.remove('hidden');
+                        userEmailEl.textContent = '';
+                        showMainView();
+                        if (profilesUnsubscribe) profilesUnsubscribe();
+                    }
+                });
+            }
+        });
+        
+        function populatePersonas() {
+            const grid = document.getElementById('personaGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            personas.forEach(persona => {
+                const div = document.createElement('div');
+                div.className = 'relative';
+                const id = `persona-${persona.name.replace(/\s+/g, '-')}`;
+                div.innerHTML = `
+                    <input type="checkbox" id="${id}" value="${persona.name}" class="persona-checkbox absolute top-2 right-2 h-5 w-5 rounded text-teal-600 focus:ring-teal-500">
+                    <label for="${id}" class="block p-3 border-2 border-gray-300 rounded-lg text-center cursor-pointer transition">
+                        <span class="text-2xl">${persona.emoji}</span><br>${persona.name}
+                    </label>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        // --- AUTH UI MANAGEMENT ---
+        function openAuthModal(view) {
+            authErrorEl.textContent = '';
+            if (view === 'login') {
+                loginView.classList.remove('hidden');
+                signupView.classList.add('hidden');
+            } else {
+                loginView.classList.add('hidden');
+                signupView.classList.remove('hidden');
+            }
+            authModal.classList.remove('hidden');
+            setTimeout(() => authModal.classList.remove('opacity-0'), 10);
+        }
+
+        function closeAuthModal() {
+            authModal.classList.add('opacity-0');
+            setTimeout(() => authModal.classList.add('hidden'), 300);
+        }
+        
+        // --- AUTH FUNCTIONS ---
+        function signupUser() {
+            if (!auth) return;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            authErrorEl.textContent = '';
+            createUserWithEmailAndPassword(auth, email, password)
+                .catch((error) => { authErrorEl.textContent = error.message; });
+        }
+
+        function loginUser() {
+            if (!auth) return;
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            authErrorEl.textContent = '';
+            signInWithEmailAndPassword(auth, email, password)
+                .catch((error) => { authErrorEl.textContent = error.message; });
+        }
+        
+        function signInWithGoogle() {
+             if (!auth) return;
+             signInWithPopup(auth, googleProvider)
+                .catch((error) => { authErrorEl.textContent = error.message; });
+        }
+
+        function logoutUser() { if (auth) signOut(auth); }
+
+        // --- VIEW MANAGEMENT ---
+        function showDashboard() {
             mainContent.classList.add('hidden');
             dashboardView.classList.remove('hidden');
         }
 
-        window.showMainView = () => {
+        function showMainView() {
             mainContent.classList.remove('hidden');
             dashboardView.classList.add('hidden');
         }
 
         // --- FIRESTORE DATABASE FUNCTIONS ---
-        const profileModal = document.getElementById('profileModal');
-        const profileErrorEl = document.getElementById('profileError');
-        const profilesListEl = document.getElementById('profilesList');
-
-        window.openProfileModal = () => {
+        function openProfileModal() {
             profileErrorEl.textContent = '';
             document.getElementById('profileName').value = '';
             document.getElementById('profileDetails').value = '';
@@ -322,61 +411,51 @@
             setTimeout(() => profileModal.classList.remove('opacity-0'), 10);
         }
 
-        window.closeProfileModal = () => {
+        function closeProfileModal() {
             profileModal.classList.add('opacity-0');
             setTimeout(() => profileModal.classList.add('hidden'), 300);
         }
 
-        window.saveProfile = async () => {
+        async function saveProfile() {
             const user = auth.currentUser;
             if (!user) {
                 profileErrorEl.textContent = "You must be logged in to save profiles.";
                 return;
             }
-
             const name = document.getElementById('profileName').value.trim();
             const details = document.getElementById('profileDetails').value.trim();
-
             if (!name || !details) {
                 profileErrorEl.textContent = "Please fill out both fields.";
                 return;
             }
-
             try {
-                const docRef = await addDoc(collection(db, "profiles"), {
+                await addDoc(collection(db, "profiles"), {
                     userId: user.uid,
                     name: name,
                     details: details,
                     createdAt: new Date()
                 });
-                console.log("Profile saved with ID: ", docRef.id);
                 closeProfileModal();
             } catch (e) {
-                console.error("Error adding document: ", e);
                 profileErrorEl.textContent = "Could not save profile. Please try again.";
             }
         }
 
         function fetchProfiles(userId) {
             const q = query(collection(db, "profiles"), where("userId", "==", userId));
-            
-            // onSnapshot listens for real-time updates
             profilesUnsubscribe = onSnapshot(q, (querySnapshot) => {
                 const profiles = [];
-                querySnapshot.forEach((doc) => {
-                    profiles.push({ id: doc.id, ...doc.data() });
-                });
+                querySnapshot.forEach((doc) => profiles.push({ id: doc.id, ...doc.data() }));
                 renderProfiles(profiles);
             });
         }
 
         function renderProfiles(profiles) {
-            profilesListEl.innerHTML = ''; // Clear the list
+            profilesListEl.innerHTML = ''; 
             if (profiles.length === 0) {
                 profilesListEl.innerHTML = '<p class="text-gray-500">You haven\'t saved any profiles yet.</p>';
                 return;
             }
-
             profiles.forEach(profile => {
                 const profileEl = document.createElement('div');
                 profileEl.className = 'flex items-center justify-between bg-gray-50 p-4 rounded-lg';
@@ -391,11 +470,53 @@
             });
         }
 
-    </script>
-    
-    <!-- Your existing app script for the gift generator tool goes here -->
-    <script>
-        // ...
+        // --- GIFT GENERATOR LOGIC ---
+        function nextStep(step) {
+            const currentStepEl = document.getElementById(`step${currentStep}`);
+            const nextStepEl = document.getElementById(`step${step}`);
+            if (currentStep !== 3) {
+                const input = currentStepEl.querySelector('input, textarea');
+                if (input && input.value.trim() === '') {
+                    input.classList.add('border-red-500');
+                    return;
+                } else if (input) {
+                    input.classList.remove('border-red-500');
+                    formData[input.name] = input.value;
+                }
+            }
+            currentStepEl.classList.remove('visible');
+            currentStepEl.classList.add('hidden');
+            setTimeout(() => {
+                nextStepEl.classList.remove('hidden');
+                nextStepEl.classList.add('visible');
+                currentStep = step;
+            }, 250);
+        }
+        function prevStep(step) {
+            const currentStepEl = document.getElementById(`step${currentStep}`);
+            const prevStepEl = document.getElementById(`step${step}`);
+            currentStepEl.classList.remove('visible');
+            currentStepEl.classList.add('hidden');
+            setTimeout(() => {
+                prevStepEl.classList.remove('hidden');
+                prevStepEl.classList.add('visible');
+                currentStep = step;
+            }, 250);
+        }
+        function selectBudget(event, value) {
+            document.querySelectorAll('.budget-option').forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+            formData['budget'] = value;
+            setTimeout(() => nextStep(4), 200);
+        }
+        function generateGifts() {
+            // This is a placeholder for the actual AI gift generation logic
+            console.log("Generating gifts with data:", formData);
+        }
+        function startOver() {
+            // This is a placeholder for the start over logic
+            console.log("Starting over");
+        }
     </script>
 
 </body>
