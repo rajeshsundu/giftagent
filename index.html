@@ -102,7 +102,7 @@
                 <div id="step1" class="step visible">
                     <label for="recipient" class="block text-xl font-semibold text-gray-800 mb-4">First, who is this amazing gift for?</label>
                     <input type="text" id="recipient" name="recipient" class="w-full p-4 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-teal-500" placeholder="e.g., My Dad, My Wife, My Best Friend">
-                    <button onclick="nextStep(2)" class="mt-6 w-full bg-teal-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-700 transition duration-150">Next &rarr;</button>
+                    <button id="step1-next" class="mt-6 w-full bg-teal-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-700 transition duration-150">Next &rarr;</button>
                 </div>
 
                 <!-- Step 2: Occasion -->
@@ -110,23 +110,22 @@
                     <label for="occasion" class="block text-xl font-semibold text-gray-800 mb-4">What's the special occasion?</label>
                     <input type="text" id="occasion" name="occasion" class="w-full p-4 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-teal-500" placeholder="e.g., His 60th Birthday, Our Anniversary">
                     <div class="flex gap-4 mt-6">
-                        <button onclick="prevStep(1)" class="w-1/3 bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-150">&larr; Back</button>
-                        <button onclick="nextStep(3)" class="w-2/3 bg-teal-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-700 transition duration-150">Next &rarr;</button>
+                        <button id="step2-back" class="w-1/3 bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-150">&larr; Back</button>
+                        <button id="step2-next" class="w-2/3 bg-teal-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-700 transition duration-150">Next &rarr;</button>
                     </div>
                 </div>
 
                 <!-- Step 3: Budget -->
                 <div id="step3" class="step hidden">
                     <label for="budget" class="block text-xl font-semibold text-gray-800 mb-4">What's your budget?</label>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        <button onclick="selectBudget(event, 'Under $50')" class="budget-option p-4 border-2 border-gray-300 rounded-lg text-lg hover:border-teal-500 hover:bg-teal-50 transition">Under $50</button>
-                        <button onclick="selectBudget(event, '$50 - $100')" class="budget-option p-4 border-2 border-gray-300 rounded-lg text-lg hover:border-teal-500 hover:bg-teal-50 transition">$50 - $100</button>
-                        <button onclick="selectBudget(event, '$100 - $250')" class="budget-option p-4 border-2 border-gray-300 rounded-lg text-lg hover:border-teal-500 hover:bg-teal-50 transition">$100 - $250</button>
-                        <button onclick="selectBudget(event, '$250+')" class="budget-option p-4 border-2 border-gray-300 rounded-lg text-lg hover:border-teal-500 hover:bg-teal-50 transition">$250+</button>
+                    <div id="budget-options" class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <button data-value="Under $50" class="budget-option p-4 border-2 border-gray-300 rounded-lg text-lg hover:border-teal-500 hover:bg-teal-50 transition">Under $50</button>
+                        <button data-value="$50 - $100" class="budget-option p-4 border-2 border-gray-300 rounded-lg text-lg hover:border-teal-500 hover:bg-teal-50 transition">$50 - $100</button>
+                        <button data-value="$100 - $250" class="budget-option p-4 border-2 border-gray-300 rounded-lg text-lg hover:border-teal-500 hover:bg-teal-50 transition">$100 - $250</button>
+                        <button data-value="$250+" class="budget-option p-4 border-2 border-gray-300 rounded-lg text-lg hover:border-teal-500 hover:bg-teal-50 transition">$250+</button>
                     </div>
-                     <input type="hidden" id="budget" name="budget">
                      <div class="flex gap-4 mt-6">
-                        <button onclick="prevStep(2)" class="w-1/3 bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-150">&larr; Back</button>
+                        <button id="step3-back" class="w-1/3 bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-150">&larr; Back</button>
                     </div>
                 </div>
 
@@ -135,8 +134,8 @@
                     <label for="details" class="block text-xl font-semibold text-gray-800 mb-4">Now for the magic. Tell me about them...</label>
                     <textarea id="details" name="details" rows="5" class="w-full p-4 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-teal-500" placeholder="e.g., He loves gardening, old Hindi music, and is always complaining about his back pain. He's a very sentimental person."></textarea>
                     <div class="flex gap-4 mt-6">
-                         <button onclick="prevStep(3)" class="w-1/3 bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-150">&larr; Back</button>
-                         <button onclick="nextStep(5)" class="w-2/3 bg-teal-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-700 transition duration-150">Next &rarr;</button>
+                         <button id="step4-back" class="w-1/3 bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-150">&larr; Back</button>
+                         <button id="step4-next" class="w-2/3 bg-teal-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-700 transition duration-150">Next &rarr;</button>
                     </div>
                 </div>
                 
@@ -147,8 +146,8 @@
                         <!-- Personas will be injected here -->
                     </div>
                     <div class="flex gap-4 mt-6">
-                         <button onclick="prevStep(4)" class="w-1/3 bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-150">&larr; Back</button>
-                         <button onclick="generateGifts()" class="w-2/3 bg-green-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-600 transition duration-150 flex items-center justify-center">
+                         <button id="step5-back" class="w-1/3 bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-150">&larr; Back</button>
+                         <button id="generateGiftsBtn" class="w-2/3 bg-green-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-600 transition duration-150 flex items-center justify-center">
                             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                             Find the Perfect Gift
                         </button>
@@ -182,7 +181,7 @@
                     <!-- Gift buckets will be injected here -->
                  </div>
                  <div class="text-center mt-12">
-                     <button onclick="startOver()" class="bg-gray-800 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-900 transition duration-150">Start a New Search</button>
+                     <button id="startOverBtn" class="bg-gray-800 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-900 transition duration-150">Start a New Search</button>
                  </div>
             </div>
         </section>
@@ -209,12 +208,31 @@
             { name: 'The Movie Buff', emoji: '🎬' },
             { name: 'The Artist', emoji: '🎨' }
         ];
-        
+
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             populatePersonas();
+            addEventListeners();
         });
         
+        function addEventListeners() {
+            // Gift Tool Steps
+            document.getElementById('step1-next').addEventListener('click', () => nextStep(2));
+            document.getElementById('step2-back').addEventListener('click', () => prevStep(1));
+            document.getElementById('step2-next').addEventListener('click', () => nextStep(3));
+            document.getElementById('step3-back').addEventListener('click', () => prevStep(2));
+            document.getElementById('budget-options').addEventListener('click', (e) => {
+                if(e.target.tagName === 'BUTTON') {
+                    selectBudget(e, e.target.dataset.value);
+                }
+            });
+            document.getElementById('step4-back').addEventListener('click', () => prevStep(3));
+            document.getElementById('step4-next').addEventListener('click', () => nextStep(5));
+            document.getElementById('step5-back').addEventListener('click', () => prevStep(4));
+            document.getElementById('generateGiftsBtn').addEventListener('click', generateGifts);
+            document.getElementById('startOverBtn').addEventListener('click', startOver);
+        }
+
         function populatePersonas() {
             const grid = document.getElementById('personaGrid');
             if (!grid) return;
@@ -234,10 +252,9 @@
         }
 
         // --- GIFT GENERATOR LOGIC ---
-        window.nextStep = function(step) {
+        function nextStep(step) {
             const currentStepEl = document.getElementById(`step${currentStep}`);
             const nextStepEl = document.getElementById(`step${step}`);
-            
             if (currentStep !== 3) {
                 const input = currentStepEl.querySelector('input, textarea');
                 if (input && input.value.trim() === '') {
@@ -248,10 +265,8 @@
                     formData[input.name] = input.value;
                 }
             }
-
             currentStepEl.classList.remove('visible');
             currentStepEl.classList.add('hidden');
-            
             setTimeout(() => {
                 nextStepEl.classList.remove('hidden');
                 nextStepEl.classList.add('visible');
@@ -259,7 +274,7 @@
             }, 250);
         }
 
-        window.prevStep = function(step) {
+        function prevStep(step) {
             const currentStepEl = document.getElementById(`step${currentStep}`);
             const prevStepEl = document.getElementById(`step${step}`);
             currentStepEl.classList.remove('visible');
@@ -271,14 +286,14 @@
             }, 250);
         }
 
-        window.selectBudget = function(event, value) {
+        function selectBudget(event, value) {
             document.querySelectorAll('.budget-option').forEach(btn => btn.classList.remove('selected'));
             event.target.classList.add('selected');
             formData['budget'] = value;
             setTimeout(() => nextStep(4), 200);
         }
 
-        window.startTimer = function() {
+        function startTimer() {
             const loaderText = document.getElementById('loaderText');
             const timerText = document.getElementById('timerText');
             const progressBar = document.getElementById('progressBar');
@@ -321,7 +336,7 @@
             }, 1000);
         }
 
-        window.generateGifts = async function() {
+        async function generateGifts() {
             const selectedPersonas = [];
             document.querySelectorAll('.persona-checkbox:checked').forEach(checkbox => {
                 selectedPersonas.push(checkbox.value);
