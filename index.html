@@ -32,10 +32,22 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .gift-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .gift-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
         .budget-option.selected {
             border-color: #0D9488; /* Darker Teal */
             background-color: #F0FDFA; /* Light Teal */
             color: #115E59;
+        }
+        /* Custom Checkbox Styles */
+        .persona-checkbox:checked {
+            background-color: #14B8A6;
+            border-color: #0D9488;
         }
         .persona-checkbox:checked + label {
             border-color: #14B8A6;
@@ -47,6 +59,7 @@
         .progress-bar-fill {
             transition: width 0.5s ease-out;
         }
+        /* Horizontal Scrollbar */
         .scroll-container {
             -ms-overflow-style: none;  /* IE and Edge */
             scrollbar-width: none;  /* Firefox */
@@ -54,214 +67,129 @@
         .scroll-container::-webkit-scrollbar {
             display: none; /* Chrome, Safari and Opera */
         }
-        .modal {
-            transition: opacity 0.3s ease;
-        }
     </style>
 </head>
 <body class="text-gray-800">
 
     <!-- Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-20">
+    <header class="bg-white shadow-sm sticky top-0 z-10">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-2xl font-bold text-gray-900 cursor-pointer" onclick="showMainView()">GiftGenius<span class="text-teal-600">.ai</span></div>
-            <div id="auth-container" class="flex items-center gap-4">
-                <!-- Logged Out State -->
-                <div id="logged-out-view">
-                    <button onclick="openAuthModal('login')" class="font-bold text-gray-600 hover:text-teal-600 transition">Log In</button>
-                    <button onclick="openAuthModal('signup')" class="bg-teal-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-teal-700 transition">Sign Up</button>
-                </div>
-                <!-- Logged In State -->
-                <div id="logged-in-view" class="hidden">
-                     <span id="userEmail" class="text-sm text-gray-500 hidden sm:block"></span>
-                     <button onclick="showDashboard()" class="font-bold text-gray-600 hover:text-teal-600 transition">Dashboard</button>
-                     <button onclick="logoutUser()" class="bg-gray-200 text-gray-700 font-bold py-2 px-5 rounded-lg hover:bg-gray-300 transition">Log Out</button>
-                </div>
-            </div>
+            <div class="text-2xl font-bold text-gray-900">GiftGenius<span class="text-teal-600">.ai</span></div>
+            <a href="#toolContainer" class="bg-teal-600 text-white font-bold py-2 px-5 rounded-lg hover:bg-teal-700 transition duration-150">Find a Gift</a>
         </nav>
     </header>
 
     <div class="container mx-auto p-4 sm:p-6 lg:p-8">
-        <div id="main-content">
-            <!-- Hero Section -->
-            <section class="text-center my-12 sm:my-20">
-                 <h1 class="text-4xl sm:text-6xl font-extrabold text-gray-900 leading-tight">
-                    Stop Guessing. <br class="hidden sm:block">
-                    Find the <span class="text-teal-600">Perfect Thoughtful Gift</span> in Seconds.
-                </h1>
-                <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">
-                    Our AI personal shopper analyzes your loved one's unique personality to suggest gifts they'll actually cherish. No more generic mugs or blankets.
-                </p>
-                <a href="#toolContainer" class="mt-8 inline-block bg-yellow-500 text-gray-900 font-bold py-4 px-8 rounded-lg text-lg hover:bg-yellow-600 transition duration-150">
-                    Start Your Free Search
-                </a>
-            </section>
-            
-            <!-- Main Tool Section -->
-            <main id="toolContainer" class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl max-w-2xl mx-auto">
-                <div id="stepsContainer" class="relative min-h-[300px]">
-                    <!-- Step 1: Recipient -->
-                    <div id="step1" class="step visible">
-                        <label for="recipient" class="block text-xl font-semibold text-gray-800 mb-4">First, who is this amazing gift for?</label>
-                        <input type="text" id="recipient" name="recipient" class="w-full p-4 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-teal-500" placeholder="e.g., My Dad, My Wife, My Best Friend">
-                        <button onclick="nextStep(2)" class="mt-6 w-full bg-teal-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-700 transition duration-150">Next &rarr;</button>
-                    </div>
 
-                    <!-- Step 2: Occasion -->
-                    <div id="step2" class="step hidden">
-                        <label for="occasion" class="block text-xl font-semibold text-gray-800 mb-4">What's the special occasion?</label>
-                        <input type="text" id="occasion" name="occasion" class="w-full p-4 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-teal-500" placeholder="e.g., His 60th Birthday, Our Anniversary">
-                        <div class="flex gap-4 mt-6">
-                            <button onclick="prevStep(1)" class="w-1/3 bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-150">&larr; Back</button>
-                            <button onclick="nextStep(3)" class="w-2/3 bg-teal-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-700 transition duration-150">Next &rarr;</button>
-                        </div>
-                    </div>
+        <!-- Hero Section -->
+        <section class="text-center my-12 sm:my-20">
+            <h1 class="text-4xl sm:text-6xl font-extrabold text-gray-900 leading-tight">
+                Stop Guessing. <br class="hidden sm:block">
+                Find the <span class="text-teal-600">Perfect Thoughtful Gift</span> in Seconds.
+            </h1>
+            <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">
+                Our AI personal shopper analyzes your loved one's unique personality to suggest gifts they'll actually cherish. No more generic mugs or blankets.
+            </p>
+            <a href="#toolContainer" class="mt-8 inline-block bg-yellow-500 text-gray-900 font-bold py-4 px-8 rounded-lg text-lg hover:bg-yellow-600 transition duration-150">
+                Start Your Free Search
+            </a>
+        </section>
 
-                    <!-- Step 3: Budget -->
-                    <div id="step3" class="step hidden">
-                        <label for="budget" class="block text-xl font-semibold text-gray-800 mb-4">What's your budget?</label>
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                            <button onclick="selectBudget(event, 'Under $50')" class="budget-option p-4 border-2 border-gray-300 rounded-lg text-lg hover:border-teal-500 hover:bg-teal-50 transition">Under $50</button>
-                            <button onclick="selectBudget(event, '$50 - $100')" class="budget-option p-4 border-2 border-gray-300 rounded-lg text-lg hover:border-teal-500 hover:bg-teal-50 transition">$50 - $100</button>
-                            <button onclick="selectBudget(event, '$100 - $250')" class="budget-option p-4 border-2 border-gray-300 rounded-lg text-lg hover:border-teal-500 hover:bg-teal-50 transition">$100 - $250</button>
-                            <button onclick="selectBudget(event, '$250+')" class="budget-option p-4 border-2 border-gray-300 rounded-lg text-lg hover:border-teal-500 hover:bg-teal-50 transition">$250+</button>
-                        </div>
-                         <input type="hidden" id="budget" name="budget">
-                         <div class="flex gap-4 mt-6">
-                            <button onclick="prevStep(2)" class="w-1/3 bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-150">&larr; Back</button>
-                        </div>
-                    </div>
+        <!-- Main Tool Section -->
+        <main id="toolContainer" class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl max-w-2xl mx-auto">
+            <div id="stepsContainer" class="relative min-h-[300px]">
+                <!-- Step 1: Recipient -->
+                <div id="step1" class="step visible">
+                    <label for="recipient" class="block text-xl font-semibold text-gray-800 mb-4">First, who is this amazing gift for?</label>
+                    <input type="text" id="recipient" name="recipient" class="w-full p-4 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-teal-500" placeholder="e.g., My Dad, My Wife, My Best Friend">
+                    <button onclick="nextStep(2)" class="mt-6 w-full bg-teal-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-700 transition duration-150">Next &rarr;</button>
+                </div>
 
-                    <!-- Step 4: The "Magic" Input -->
-                    <div id="step4" class="step hidden">
-                        <label for="details" class="block text-xl font-semibold text-gray-800 mb-4">Now for the magic. Tell me about them...</label>
-                        <textarea id="details" name="details" rows="5" class="w-full p-4 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-teal-500" placeholder="e.g., He loves gardening, old Hindi music, and is always complaining about his back pain. He's a very sentimental person."></textarea>
-                        <div class="flex gap-4 mt-6">
-                             <button onclick="prevStep(3)" class="w-1/3 bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-150">&larr; Back</button>
-                             <button onclick="nextStep(5)" class="w-2/3 bg-teal-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-700 transition duration-150">Next &rarr;</button>
-                        </div>
-                    </div>
-                    
-                    <!-- Step 5: Persona -->
-                    <div id="step5" class="step hidden">
-                        <label class="block text-xl font-semibold text-gray-800 mb-4">Which of these best describe them? (Select all that apply)</label>
-                        <div id="personaGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                            <!-- Personas will be injected here -->
-                        </div>
-                        <div class="flex gap-4 mt-6">
-                             <button onclick="prevStep(4)" class="w-1/3 bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-150">&larr; Back</button>
-                             <button onclick="generateGifts()" class="w-2/3 bg-green-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-600 transition duration-150 flex items-center justify-center">
-                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                                Find the Perfect Gift
-                            </button>
-                        </div>
+                <!-- Step 2: Occasion -->
+                <div id="step2" class="step hidden">
+                    <label for="occasion" class="block text-xl font-semibold text-gray-800 mb-4">What's the special occasion?</label>
+                    <input type="text" id="occasion" name="occasion" class="w-full p-4 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-teal-500" placeholder="e.g., His 60th Birthday, Our Anniversary">
+                    <div class="flex gap-4 mt-6">
+                        <button onclick="prevStep(1)" class="w-1/3 bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-150">&larr; Back</button>
+                        <button onclick="nextStep(3)" class="w-2/3 bg-teal-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-700 transition duration-150">Next &rarr;</button>
                     </div>
                 </div>
-            </main>
-            <section id="resultsSection" class="mt-16 hidden">
-                 <!-- Results will be shown here -->
-            </section>
-        </div>
 
-        <!-- Dashboard Section (Hidden by default) -->
-        <div id="dashboard-view" class="hidden">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8">Your Dashboard</h2>
-            
-            <div class="bg-teal-50 border-2 border-teal-200 p-6 rounded-2xl mb-8 text-center">
-                <h3 class="text-2xl font-bold text-teal-800">Unlock Your Full Potential</h3>
-                <p class="text-teal-700 mt-2">Upgrade to GiftGenius Pro to save profiles, get unlimited searches, and set occasion reminders.</p>
-                <button class="mt-4 bg-teal-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-700 transition">Upgrade to Pro ($9/month)</button>
-            </div>
-
-            <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl mb-8">
-                <h3 class="text-2xl font-semibold text-gray-800 mb-6">Saved Profiles</h3>
-                <div id="profilesList" class="space-y-4">
-                    <!-- Profiles from Firestore will be injected here -->
-                    <p class="text-gray-500">You haven't saved any profiles yet.</p>
+                <!-- Step 3: Budget -->
+                <div id="step3" class="step hidden">
+                    <label for="budget" class="block text-xl font-semibold text-gray-800 mb-4">What's your budget?</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <button onclick="selectBudget(event, 'Under $50')" class="budget-option p-4 border-2 border-gray-300 rounded-lg text-lg hover:border-teal-500 hover:bg-teal-50 transition">Under $50</button>
+                        <button onclick="selectBudget(event, '$50 - $100')" class="budget-option p-4 border-2 border-gray-300 rounded-lg text-lg hover:border-teal-500 hover:bg-teal-50 transition">$50 - $100</button>
+                        <button onclick="selectBudget(event, '$100 - $250')" class="budget-option p-4 border-2 border-gray-300 rounded-lg text-lg hover:border-teal-500 hover:bg-teal-50 transition">$100 - $250</button>
+                        <button onclick="selectBudget(event, '$250+')" class="budget-option p-4 border-2 border-gray-300 rounded-lg text-lg hover:border-teal-500 hover:bg-teal-50 transition">$250+</button>
+                    </div>
+                     <input type="hidden" id="budget" name="budget">
+                     <div class="flex gap-4 mt-6">
+                        <button onclick="prevStep(2)" class="w-1/3 bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-150">&larr; Back</button>
+                    </div>
                 </div>
-                <button onclick="openProfileModal()" class="mt-6 w-full bg-gray-200 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-300 transition">Add New Profile</button>
+
+                <!-- Step 4: The "Magic" Input -->
+                <div id="step4" class="step hidden">
+                    <label for="details" class="block text-xl font-semibold text-gray-800 mb-4">Now for the magic. Tell me about them...</label>
+                    <textarea id="details" name="details" rows="5" class="w-full p-4 border border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-teal-500" placeholder="e.g., He loves gardening, old Hindi music, and is always complaining about his back pain. He's a very sentimental person."></textarea>
+                    <div class="flex gap-4 mt-6">
+                         <button onclick="prevStep(3)" class="w-1/3 bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-150">&larr; Back</button>
+                         <button onclick="nextStep(5)" class="w-2/3 bg-teal-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-700 transition duration-150">Next &rarr;</button>
+                    </div>
+                </div>
+                
+                <!-- Step 5: Persona -->
+                <div id="step5" class="step hidden">
+                    <label class="block text-xl font-semibold text-gray-800 mb-4">Which of these best describe them? (Select all that apply)</label>
+                    <div id="personaGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        <!-- Personas will be injected here -->
+                    </div>
+                    <div class="flex gap-4 mt-6">
+                         <button onclick="prevStep(4)" class="w-1/3 bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-150">&larr; Back</button>
+                         <button onclick="generateGifts()" class="w-2/3 bg-green-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-600 transition duration-150 flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                            Find the Perfect Gift
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Results Section -->
+        <section id="resultsSection" class="mt-16 hidden">
+            <div id="loader" class="text-center">
+                <div class="flex justify-center items-center flex-col p-6">
+                    <div id="emojiLoader" class="text-6xl mb-4">🎁</div>
+                    <p id="loaderText" class="text-xl text-gray-600">Our AI is thinking...</p>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 mt-4 max-w-sm mx-auto">
+                        <div id="progressBar" class="bg-teal-600 h-2.5 rounded-full progress-bar-fill" style="width: 100%"></div>
+                    </div>
+                    <p id="timerText" class="text-md text-gray-500 mt-2">Finding the most thoughtful gifts for you!</p>
+                </div>
             </div>
 
-            <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-xl">
-                <h3 class="text-2xl font-semibold text-gray-800 mb-6">Occasion Reminders</h3>
-                 <div id="remindersList" class="space-y-4">
-                    <p class="text-gray-500">You haven't set any reminders yet.</p>
+            <div id="resultsContent" class="hidden">
+                 <div id="featuredContent" class="text-center mb-12">
+                    <div id="featuredImageContainer" class="w-full h-64 bg-gray-200 rounded-2xl shadow-lg mb-6 flex items-center justify-center">
+                        <div class="loader ease-linear rounded-full border-8 border-t-8 border-gray-300 h-24 w-24"></div>
+                    </div>
+                    <p id="introParagraph" class="text-lg text-gray-700 max-w-3xl mx-auto"></p>
                  </div>
-                <button class="mt-6 w-full bg-gray-200 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-300 transition">Add New Reminder</button>
+                 <div id="editorsPick" class="mb-12"></div>
+                 <div id="resultsGrid" class="space-y-12">
+                    <!-- Gift buckets will be injected here -->
+                 </div>
+                 <div class="text-center mt-12">
+                     <button onclick="startOver()" class="bg-gray-800 text-white font-bold py-3 px-8 rounded-lg hover:bg-gray-900 transition duration-150">Start a New Search</button>
+                 </div>
             </div>
-        </div>
-    </div>
-    
-    <!-- Auth Modal -->
-    <div id="authModal" class="modal fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-30 hidden opacity-0">
-        <!-- Auth modal content... -->
-    </div>
-    
-    <!-- Add Profile Modal -->
-    <div id="profileModal" class="modal fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-30 hidden opacity-0">
-        <div class="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full relative">
-            <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">&times;</button>
-            <h2 class="text-2xl font-bold mb-4">Add a New Profile</h2>
-            <p class="text-gray-600 mb-6">Save details about your loved ones for faster, more personalized gift searches in the future.</p>
-            <div class="space-y-4">
-                <input type="text" id="profileName" placeholder="Profile Name (e.g., Dad, Jane)" class="w-full p-3 border border-gray-300 rounded-lg">
-                <textarea id="profileDetails" rows="4" placeholder="Their interests, hobbies, and personality (e.g., Loves gardening, old music, and movies. Fan of classic rock.)" class="w-full p-3 border border-gray-300 rounded-lg"></textarea>
-                <button onclick="saveProfile()" class="w-full bg-teal-600 text-white font-bold py-3 rounded-lg hover:bg-teal-700">Save Profile</button>
-            </div>
-            <p id="profileError" class="text-red-500 text-sm mt-4"></p>
-        </div>
+        </section>
+
     </div>
 
-
-    <!-- Main App Script -->
-    <script type="module">
-        // Import Firebase functions
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { 
-            getAuth, 
-            onAuthStateChanged,
-            createUserWithEmailAndPassword,
-            signInWithEmailAndPassword,
-            GoogleAuthProvider,
-            signInWithPopup,
-            signOut
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import {
-            getFirestore,
-            collection,
-            addDoc,
-            query,
-            where,
-            onSnapshot
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCW0JGmWx9Jktu0g33DcRz9CdgXblkmm-4",
-            authDomain: "giftagent-3c6a4.firebaseapp.com",
-            projectId: "giftagent-3c6a4",
-            storageBucket: "giftagent-3c6a4.appspot.com",
-            messagingSenderId: "69511320242",
-            appId: "1:69511320242:web:22a45257d8bacf4aa2efab",
-            measurementId: "G-XW6QWBDYPX"
-        };
-
-        // Initialize Firebase
-        let app;
-        let auth;
-        let db;
-        let googleProvider;
-        let profilesUnsubscribe = null;
-
-        try {
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-            googleProvider = new GoogleAuthProvider();
-        } catch (error) {
-            console.error("Firebase initialization failed.", error);
-        }
-
+    <script>
         // --- GLOBAL APP STATE & CONSTANTS ---
         let currentStep = 1;
         const formData = { personas: [] };
@@ -282,49 +210,9 @@
             { name: 'The Artist', emoji: '🎨' }
         ];
         
-        // --- DOM ELEMENTS ---
-        const authModal = document.getElementById('authModal');
-        const loginView = document.getElementById('login-view');
-        const signupView = document.getElementById('signup-view');
-        const loggedInView = document.getElementById('logged-in-view');
-        const loggedOutView = document.getElementById('logged-out-view');
-        const userEmailEl = document.getElementById('userEmail');
-        const authErrorEl = document.getElementById('authError');
-        const mainContent = document.getElementById('main-content');
-        const dashboardView = document.getElementById('dashboard-view');
-        const profileModal = document.getElementById('profileModal');
-        const profileErrorEl = document.getElementById('profileError');
-        const profilesListEl = document.getElementById('profilesList');
-
-        // --- ATTACH FUNCTIONS TO WINDOW OBJECT ---
-        Object.assign(window, {
-            nextStep, prevStep, selectBudget, generateGifts, startOver,
-            openAuthModal, closeAuthModal, signupUser, loginUser, signInWithGoogle, logoutUser,
-            showDashboard, showMainView, openProfileModal, closeProfileModal, saveProfile
-        });
-
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             populatePersonas();
-            // Firebase Auth State Listener
-            if (auth) {
-                onAuthStateChanged(auth, user => {
-                    if (user) {
-                        loggedInView.classList.remove('hidden');
-                        loggedOutView.classList.add('hidden');
-                        userEmailEl.textContent = user.email;
-                        closeAuthModal();
-                        showDashboard();
-                        fetchProfiles(user.uid);
-                    } else {
-                        loggedInView.classList.add('hidden');
-                        loggedOutView.classList.remove('hidden');
-                        userEmailEl.textContent = '';
-                        showMainView();
-                        if (profilesUnsubscribe) profilesUnsubscribe();
-                    }
-                });
-            }
         });
         
         function populatePersonas() {
@@ -345,135 +233,11 @@
             });
         }
 
-        // --- AUTH UI MANAGEMENT ---
-        function openAuthModal(view) {
-            authErrorEl.textContent = '';
-            if (view === 'login') {
-                loginView.classList.remove('hidden');
-                signupView.classList.add('hidden');
-            } else {
-                loginView.classList.add('hidden');
-                signupView.classList.remove('hidden');
-            }
-            authModal.classList.remove('hidden');
-            setTimeout(() => authModal.classList.remove('opacity-0'), 10);
-        }
-
-        function closeAuthModal() {
-            authModal.classList.add('opacity-0');
-            setTimeout(() => authModal.classList.add('hidden'), 300);
-        }
-        
-        // --- AUTH FUNCTIONS ---
-        function signupUser() {
-            if (!auth) return;
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;
-            authErrorEl.textContent = '';
-            createUserWithEmailAndPassword(auth, email, password)
-                .catch((error) => { authErrorEl.textContent = error.message; });
-        }
-
-        function loginUser() {
-            if (!auth) return;
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            authErrorEl.textContent = '';
-            signInWithEmailAndPassword(auth, email, password)
-                .catch((error) => { authErrorEl.textContent = error.message; });
-        }
-        
-        function signInWithGoogle() {
-             if (!auth) return;
-             signInWithPopup(auth, googleProvider)
-                .catch((error) => { authErrorEl.textContent = error.message; });
-        }
-
-        function logoutUser() { if (auth) signOut(auth); }
-
-        // --- VIEW MANAGEMENT ---
-        function showDashboard() {
-            mainContent.classList.add('hidden');
-            dashboardView.classList.remove('hidden');
-        }
-
-        function showMainView() {
-            mainContent.classList.remove('hidden');
-            dashboardView.classList.add('hidden');
-        }
-
-        // --- FIRESTORE DATABASE FUNCTIONS ---
-        function openProfileModal() {
-            profileErrorEl.textContent = '';
-            document.getElementById('profileName').value = '';
-            document.getElementById('profileDetails').value = '';
-            profileModal.classList.remove('hidden');
-            setTimeout(() => profileModal.classList.remove('opacity-0'), 10);
-        }
-
-        function closeProfileModal() {
-            profileModal.classList.add('opacity-0');
-            setTimeout(() => profileModal.classList.add('hidden'), 300);
-        }
-
-        async function saveProfile() {
-            const user = auth.currentUser;
-            if (!user) {
-                profileErrorEl.textContent = "You must be logged in to save profiles.";
-                return;
-            }
-            const name = document.getElementById('profileName').value.trim();
-            const details = document.getElementById('profileDetails').value.trim();
-            if (!name || !details) {
-                profileErrorEl.textContent = "Please fill out both fields.";
-                return;
-            }
-            try {
-                await addDoc(collection(db, "profiles"), {
-                    userId: user.uid,
-                    name: name,
-                    details: details,
-                    createdAt: new Date()
-                });
-                closeProfileModal();
-            } catch (e) {
-                profileErrorEl.textContent = "Could not save profile. Please try again.";
-            }
-        }
-
-        function fetchProfiles(userId) {
-            const q = query(collection(db, "profiles"), where("userId", "==", userId));
-            profilesUnsubscribe = onSnapshot(q, (querySnapshot) => {
-                const profiles = [];
-                querySnapshot.forEach((doc) => profiles.push({ id: doc.id, ...doc.data() }));
-                renderProfiles(profiles);
-            });
-        }
-
-        function renderProfiles(profiles) {
-            profilesListEl.innerHTML = ''; 
-            if (profiles.length === 0) {
-                profilesListEl.innerHTML = '<p class="text-gray-500">You haven\'t saved any profiles yet.</p>';
-                return;
-            }
-            profiles.forEach(profile => {
-                const profileEl = document.createElement('div');
-                profileEl.className = 'flex items-center justify-between bg-gray-50 p-4 rounded-lg';
-                profileEl.innerHTML = `
-                    <div>
-                        <p class="font-bold text-gray-800">${profile.name}</p>
-                        <p class="text-sm text-gray-500 truncate max-w-xs">${profile.details}</p>
-                    </div>
-                    <button class="text-teal-600 hover:text-teal-800 font-semibold">Find Gift</button>
-                `;
-                profilesListEl.appendChild(profileEl);
-            });
-        }
-
         // --- GIFT GENERATOR LOGIC ---
-        function nextStep(step) {
+        window.nextStep = function(step) {
             const currentStepEl = document.getElementById(`step${currentStep}`);
             const nextStepEl = document.getElementById(`step${step}`);
+            
             if (currentStep !== 3) {
                 const input = currentStepEl.querySelector('input, textarea');
                 if (input && input.value.trim() === '') {
@@ -484,15 +248,18 @@
                     formData[input.name] = input.value;
                 }
             }
+
             currentStepEl.classList.remove('visible');
             currentStepEl.classList.add('hidden');
+            
             setTimeout(() => {
                 nextStepEl.classList.remove('hidden');
                 nextStepEl.classList.add('visible');
                 currentStep = step;
             }, 250);
         }
-        function prevStep(step) {
+
+        window.prevStep = function(step) {
             const currentStepEl = document.getElementById(`step${currentStep}`);
             const prevStepEl = document.getElementById(`step${step}`);
             currentStepEl.classList.remove('visible');
@@ -503,20 +270,368 @@
                 currentStep = step;
             }, 250);
         }
-        function selectBudget(event, value) {
+
+        window.selectBudget = function(event, value) {
             document.querySelectorAll('.budget-option').forEach(btn => btn.classList.remove('selected'));
             event.target.classList.add('selected');
             formData['budget'] = value;
             setTimeout(() => nextStep(4), 200);
         }
-        function generateGifts() {
-            // This is a placeholder for the actual AI gift generation logic
-            console.log("Generating gifts with data:", formData);
+
+        window.startTimer = function() {
+            const loaderText = document.getElementById('loaderText');
+            const timerText = document.getElementById('timerText');
+            const progressBar = document.getElementById('progressBar');
+            const emojiLoader = document.getElementById('emojiLoader');
+            const giftEmojis = ['🎁', '🎂', '🎉', '💍', '❤️', '🎄', '✨'];
+
+            const messages = [
+                "Consulting with expert gift-givers...",
+                "Analyzing personality traits...",
+                "Finding unique and thoughtful ideas...",
+                "Ignoring all the boring stuff...",
+                "Crafting personalized recommendations..."
+            ];
+            let messageIndex = 0;
+            let totalTime = 45;
+            let timeLeft = totalTime;
+
+            loaderText.textContent = messages[messageIndex];
+            timerText.textContent = `Estimated time remaining: ${timeLeft} seconds`;
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                
+                if (timeLeft < 0) {
+                    timerText.textContent = "Just a few more seconds... Polishing your recommendations!";
+                    progressBar.style.width = `0%`;
+                    return;
+                }
+                
+                const progressPercentage = (timeLeft / totalTime) * 100;
+                progressBar.style.width = `${progressPercentage}%`;
+
+                emojiLoader.textContent = giftEmojis[Math.floor(Math.random() * giftEmojis.length)];
+                if (timeLeft % 7 === 0 && timeLeft > 0) { 
+                    messageIndex = (messageIndex + 1) % messages.length;
+                    loaderText.textContent = messages[messageIndex];
+                }
+                timerText.textContent = `Estimated time remaining: ${timeLeft} seconds`;
+
+            }, 1000);
         }
+
+        window.generateGifts = async function() {
+            const selectedPersonas = [];
+            document.querySelectorAll('.persona-checkbox:checked').forEach(checkbox => {
+                selectedPersonas.push(checkbox.value);
+            });
+            formData.personas = selectedPersonas;
+
+            if (formData.personas.length === 0) {
+                alert("Please select at least one persona.");
+                return;
+            }
+
+            document.getElementById('toolContainer').classList.add('hidden');
+            const resultsSection = document.getElementById('resultsSection');
+            resultsSection.classList.remove('hidden');
+            document.getElementById('loader').classList.remove('hidden');
+            document.getElementById('resultsContent').classList.add('hidden');
+            window.scrollTo(0, resultsSection.offsetTop);
+            startTimer();
+            
+            const prompt = `
+                You are GiftGenius, an expert at finding thoughtful gifts. Generate 10-15 personalized gift ideas, including 2-3 classic, expected gifts for the chosen personas. Then, choose one as the "Editor's Pick".
+
+                Information:
+                - Recipient: ${formData.recipient}
+                - Occasion: ${formData.occasion}
+                - Budget: ${formData.budget}
+                - Personas: ${formData.personas.join(', ')}
+                - Details: ${formData.details}
+
+                For each of the 10-15 gift ideas, provide:
+                - "title": A clear, conceptual gift idea title.
+                - "category": A category (e.g., "Sentimental Keepsake").
+                - "description": A detailed explanation of why this gift concept is a perfect choice.
+                - "emotional_image_prompt": A detailed, emotional prompt for an AI to generate an image of the gifting moment.
+                - "products": An array of 3-5 specific, real-world product examples that can be bought on Amazon. Each object in the array should have a "product_name" and "image_keywords".
+                
+                For the "editors_pick" object, provide:
+                - "title": The title of the gift concept you've chosen as the best.
+                - "justification": A detailed paragraph explaining why this specific gift is the most thoughtful and impactful choice.
+
+                For the "featured_content" object, provide:
+                - "intro_paragraph": A 2-line hook paragraph. Start it with a relevant long-tail keyword based on the user's query.
+                - "featured_image_prompt": A highly detailed, emotional prompt for the main featured image, based on the relationship.
+
+                Respond with a single, valid JSON object: { "featured_content": {...}, "gift_ideas": [...], "editors_pick": {...} }.
+            `;
+            
+            const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+            const payload = {
+                contents: chatHistory,
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                           "featured_content": {
+                                type: "OBJECT",
+                                properties: {
+                                    "intro_paragraph": { "type": "STRING" },
+                                    "featured_image_prompt": { "type": "STRING" }
+                                },
+                                required: ["intro_paragraph", "featured_image_prompt"]
+                            },
+                            "gift_ideas": {
+                                type: "ARRAY",
+                                items: {
+                                    type: "OBJECT",
+                                    properties: {
+                                        "title": { "type": "STRING" },
+                                        "category": { "type": "STRING" },
+                                        "description": { "type": "STRING" },
+                                        "emotional_image_prompt": { "type": "STRING" },
+                                        "products": {
+                                            type: "ARRAY",
+                                            items: {
+                                                type: "OBJECT",
+                                                properties: {
+                                                    "product_name": { "type": "STRING" },
+                                                    "image_keywords": { "type": "STRING" }
+                                                },
+                                                required: ["product_name", "image_keywords"]
+                                            }
+                                        }
+                                    },
+                                    required: ["title", "category", "description", "emotional_image_prompt", "products"]
+                                }
+                            },
+                            "editors_pick": {
+                                type: "OBJECT",
+                                properties: {
+                                    "title": { "type": "STRING" },
+                                    "justification": { "type": "STRING" }
+                                },
+                                required: ["title", "justification"]
+                            }
+                        },
+                        required: ["featured_content", "gift_ideas", "editors_pick"]
+                    }
+                }
+            };
+
+            try {
+                const apiKey = ""; // Leave as-is
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                const response = await fetchWithExponentialBackoff(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
+                const result = await response.json();
+                
+                if (result.candidates?.[0]?.content?.parts?.[0]) {
+                    const jsonText = result.candidates[0].content.parts[0].text;
+                    const data = JSON.parse(jsonText);
+                    await displayResults(data.gift_ideas, data.editors_pick, data.featured_content);
+                } else {
+                    throw new Error("Unexpected API response structure");
+                }
+
+            } catch (error) {
+                console.error("Error generating gifts:", error);
+                displayError();
+            } finally {
+                clearInterval(timerInterval);
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('resultsContent').classList.remove('hidden');
+            }
+        }
+
+        async function fetchWithExponentialBackoff(url, options, maxRetries = 5, initialDelay = 1000) {
+            let delay = initialDelay;
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.status !== 429) return response;
+                } catch (error) {
+                    if (i === maxRetries - 1) throw error;
+                }
+                await new Promise(resolve => setTimeout(resolve, delay));
+                delay *= 2;
+            }
+        }
+        
+        async function displayResults(gifts, editorsPick, featuredContent) {
+            const resultsGrid = document.getElementById('resultsGrid');
+            const editorsPickDiv = document.getElementById('editorsPick');
+            const introPara = document.getElementById('introParagraph');
+            resultsGrid.innerHTML = ''; 
+            editorsPickDiv.innerHTML = '';
+            introPara.innerHTML = '';
+
+            if (!gifts || gifts.length === 0) {
+                displayError();
+                return;
+            }
+
+            introPara.textContent = featuredContent.intro_paragraph;
+            await generateAndDisplayImage(featuredContent.featured_image_prompt, 'featuredImageContainer', 'Featured Gift Moment');
+
+            const editorsPickGift = gifts.find(g => g.title === editorsPick.title);
+            if (editorsPickGift) {
+                const cardId = `editors-pick-card`;
+                editorsPickDiv.innerHTML = `
+                    <div class="bg-white rounded-2xl shadow-2xl border-4 border-yellow-400 p-6">
+                        <div class="text-center mb-4"><span class="inline-block bg-yellow-400 text-gray-900 text-sm font-bold px-4 py-1 rounded-full uppercase">Editor's Pick</span></div>
+                        <div class="md:flex gap-6">
+                             <div id="${cardId}" class="h-48 w-full md:w-48 object-cover rounded-lg mb-4 md:mb-0 bg-gray-200 flex-shrink-0 flex items-center justify-center">
+                                <div class="spinner h-8 w-8 border-4 rounded-full"></div>
+                             </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-900">${editorsPickGift.title}</h3>
+                                <p class="mt-2 text-gray-600"><span class="font-semibold text-gray-800">Why it's the best choice:</span> ${editorsPick.justification}</p>
+                            </div>
+                        </div>
+                        <div id="editors-pick-products" class="mt-4"></div>
+                    </div>
+                `;
+                 await generateAndDisplayImage(editorsPickGift.emotional_image_prompt, cardId, editorsPickGift.title);
+                 findAndDisplayProducts(editorsPickGift.products, 'editors-pick-products');
+            }
+
+            for (let i = 0; i < gifts.length; i++) {
+                const gift = gifts[i];
+                if (gift.title === editorsPick.title) continue;
+                
+                const bucketId = `gift-bucket-${i}`;
+                const card = `
+                    <div class="gift-card bg-white rounded-xl shadow-lg overflow-hidden p-6">
+                        <div class="flex flex-col sm:flex-row gap-6">
+                            <div id="emotional-card-${i}" class="h-40 w-full sm:w-40 object-cover rounded-lg bg-gray-200 flex-shrink-0 flex items-center justify-center">
+                                 <div class="spinner h-8 w-8 border-4 rounded-full"></div>
+                            </div>
+                            <div class="flex-grow">
+                                <span class="uppercase tracking-wide text-sm text-teal-600 font-semibold">${gift.category}</span>
+                                <h3 class="block mt-1 text-2xl leading-tight font-bold text-black">${gift.title}</h3>
+                                <p class="mt-2 text-gray-500">${gift.description}</p>
+                            </div>
+                        </div>
+                        <div id="${bucketId}" class="mt-4"></div>
+                    </div>
+                `;
+                resultsGrid.innerHTML += card;
+                await generateAndDisplayImage(gift.emotional_image_prompt, `emotional-card-${i}`, "Gifting Moment");
+                findAndDisplayProducts(gift.products, bucketId);
+            }
+        }
+
+        function findAndDisplayProducts(products, containerId) {
+            const container = document.getElementById(containerId);
+            if (!products || products.length === 0) {
+                container.innerHTML = `<p class="text-sm text-gray-500 p-2">No specific product examples found for this idea.</p>`;
+                return;
+            }
+            
+            let productHtml = '<div class="flex overflow-x-auto space-x-4 p-2 scroll-container">';
+            products.forEach(product => {
+                const affiliateUrl = `https://www.amazon.com/s?k=${encodeURIComponent(product.product_name)}&tag=your-affiliate-id-21`;
+                const imageUrl = `https://placehold.co/300x300/E2E8F0/4A5568?text=${encodeURIComponent(product.image_keywords.replace(/\s/g, '+'))}`;
+                productHtml += `
+                    <a href="${affiliateUrl}" target="_blank" class="flex-shrink-0 w-40 text-center group">
+                        <div class="w-full h-40 bg-gray-200 rounded-lg overflow-hidden">
+                            <img src="${imageUrl}" alt="${product.product_name}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" onerror="this.onerror=null;this.src='https://placehold.co/300/CCCCCC/FFFFFF?text=Product';">
+                        </div>
+                        <p class="mt-2 text-sm font-medium text-gray-700 group-hover:text-teal-600">${product.product_name}</p>
+                    </a>
+                `;
+            });
+            productHtml += '</div>';
+            container.innerHTML = productHtml;
+        }
+
+        async function generateAndDisplayImage(prompt, containerId, altText) {
+            const imageContainer = document.getElementById(containerId);
+            try {
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { responseModalities: ['TEXT', 'IMAGE'] },
+                };
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-preview-image-generation:generateContent?key=${apiKey}`;
+                
+                const response = await fetchWithExponentialBackoff(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) throw new Error('Live AI generation failed');
+                const result = await response.json();
+                const base64Data = result?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
+
+                if (base64Data) {
+                    const imageUrl = `data:image/png;base64,${base64Data}`;
+                    imageContainer.innerHTML = `<img src="${imageUrl}" alt="${altText}" class="w-full h-full object-cover">`;
+                    return;
+                } else {
+                    throw new Error('No image data in live AI response');
+                }
+            } catch (error) {
+                console.warn("Live AI image generation failed, falling back:", error);
+                try {
+                    const unsplashUrl = `https://source.unsplash.com/600x400/?${encodeURIComponent(prompt)}`;
+                    imageContainer.innerHTML = `<img src="${unsplashUrl}" alt="${altText}" class="w-full h-full object-cover" onerror="this.onerror=null;this.parentElement.innerHTML = '<img src=\\'https://placehold.co/600x400/CCCCCC/FFFFFF?text=Image+Not+Found\\' alt=\\'${altText}\\' class=\\'w-full h-full object-cover\\'>';">`;
+                } catch (unsplashError) {
+                    const fallbackUrl = `https://placehold.co/600x400/CCCCCC/FFFFFF?text=${encodeURIComponent(altText.replace(/\s/g, '+'))}`;
+                    imageContainer.innerHTML = `<img src="${fallbackUrl}" alt="${altText}" class="w-full h-full object-cover">`;
+                }
+            }
+        }
+        
+        function displayError() {
+            clearInterval(timerInterval);
+            const resultsGrid = document.getElementById('resultsGrid');
+            resultsGrid.innerHTML = `
+                <div class="text-center bg-red-50 p-6 rounded-lg">
+                    <h3 class="text-xl font-bold text-red-700">Oops! Something went wrong.</h3>
+                    <p class="text-red-600 mt-2">Our AI is a bit busy right now. Please try your search again in a moment.</p>
+                </div>
+            `;
+        }
+
         function startOver() {
-            // This is a placeholder for the start over logic
-            console.log("Starting over");
+            currentStep = 1;
+            Object.keys(formData).forEach(key => delete formData[key]);
+            formData.personas = [];
+            
+            document.querySelectorAll('.step').forEach((el, index) => {
+                if (index === 0) {
+                    el.classList.remove('hidden');
+                    el.classList.add('visible');
+                } else {
+                    el.classList.add('hidden');
+                    el.classList.remove('visible');
+                }
+            });
+
+            document.getElementById('toolContainer').classList.remove('hidden');
+            document.getElementById('resultsSection').classList.add('hidden');
+            
+            document.getElementById('recipient').value = '';
+            document.getElementById('occasion').value = '';
+            document.getElementById('details').value = '';
+            document.querySelectorAll('.budget-option').forEach(btn => btn.classList.remove('selected'));
+            document.querySelectorAll('.persona-checkbox').forEach(cb => cb.checked = false);
+            window.scrollTo(0,0);
         }
+
     </script>
 
 </body>
